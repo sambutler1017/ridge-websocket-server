@@ -1,6 +1,6 @@
 package com.hydro.websocket.websockets.rest;
 
-import com.hydro.websocket.websockets.domain.GrowProfile;
+import com.hydro.websocket.websockets.domain.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -28,22 +28,22 @@ public class WebSocketController {
      * Method that will send a {@link GrowProfile} to the Pi and update the embedded
      * system settings
      * 
-     * @param profile The updated grow profile.
+     * @param profile The updated system settings.
      * @throws Exception
      */
     @PostMapping("/update-data")
-    public void sendSystemUpdate(@RequestBody GrowProfile profile) throws Exception {
-        template.convertAndSend("/topic/update-system", profile);
+    public void sendSystemUpdate(@RequestBody CurrentSystemSettings settings) throws Exception {
+        template.convertAndSend("/topic/update-system", settings);
     }
 
     /**
-     * Method to determine to turn the lights on or off.
+     * Method to live control certain aspects of the hydroponics system.
      * 
-     * @param lightsOn Status of the lights.
+     * @param cmds List of util commands to send to the hydro system.
      * @throws Exception
      */
-    @PostMapping("/lights")
-    public void sendSystemUpdate(@RequestBody Boolean lightsOn) throws Exception {
-        template.convertAndSend("/topic/lights", lightsOn);
+    @PostMapping("/update-util")
+    public void sendSystemUpdate(@RequestBody HydroCommand[] cmds) throws Exception {
+        template.convertAndSend("/topic/util", cmds);
     }
 }
